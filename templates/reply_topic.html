@@ -25,7 +25,12 @@
 </form>
 
 {% for post in topic.posts.all %}
-<div class="card mb-2">
+<div class="card mb-2 {% if forloop.first %}border-dark{% endif %}">
+    <!--让第一条回复在页面上更突出-->
+    {% if forloop.first %}
+    <div class="card-header text-white bg-dark py-2 px-3">{{ topic.subject }}</div>
+    {% endif %}
+
     <div class="card-body p-3">
         <div class="row mb-3">
             <div class="col-6">
