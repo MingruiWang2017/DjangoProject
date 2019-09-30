@@ -10,6 +10,7 @@
                 <h3 class="card-title">Login</h3>
                 <form method="post" novalidate>
                     {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}">  <!--登录成功后跳回之前页面-->
                     {% include 'include/form.html' %}
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
                 </form>

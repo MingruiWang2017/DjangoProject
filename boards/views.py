@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from django.http import Http404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from .models import Board, Topic, Post
@@ -25,6 +24,7 @@ def board_topics(request, pk):
     return render(request, 'topics.html', {'board': board})
 
 
+@login_required
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
     user = User.objects.first()  # TODO: 临时使用一个账号作为登录用户
