@@ -34,20 +34,22 @@ class PasswordResetTests(TestCase):
         self.assertContains(self.response, '<input', 2)
         self.assertContains(self.response, 'type="email"', 1)
 
+
 class SuccessfulPasswordResetTests(TestCase):
     def setUp(self):
         email = 'john@doe.com'
-        User.objects.create_user(username='john', email=email,password='123456a?')
+        User.objects.create_user(username='john', email=email, password='123456a?')
         url = reverse('password_reset')
         self.response = self.client.post(url, {'email': email})
 
     def test_redirection(self):
         """一个合法的表单提交应该重定向到 password_reset_done 页面"""
-        url = reverse('passeord_reset_done')
+        url = reverse('password_reset_done')
         self.assertRedirects(self.response, url)
 
     def test_send_password_reset_email(self):
         self.assertEquals(1, len(mail.outbox))
+
 
 class InvaildPasswordResetTests(TestCase):
     def setUp(self):
@@ -62,6 +64,7 @@ class InvaildPasswordResetTests(TestCase):
     def test_no_reset_email_sent(self):
         self.assertEqual(0, len(mail.outbox))
 
+
 class PasswordResetDoneTests(TestCase):
     def setUp(self):
         url = reverse('password_reset_done')
@@ -74,9 +77,10 @@ class PasswordResetDoneTests(TestCase):
         view = resolve('/reset/done/')
         self.assertEquals(view.func.view_class, auth_views.PasswordResetDoneView)
 
+
 class PasswordResetConfirmTests(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='john', email='john@doe.com', password='123456a?')
+        user = User.objects.create_user(username='john', email='john@doe.com', password='123abcdef')
         '''
         创建一个合法的更改密码 token。
         Django内部如何创建token可以参考：https://github.com/django/django/blob/1.11.5/django/contrib/auth/forms.py#L280
@@ -91,7 +95,7 @@ class PasswordResetConfirmTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_func(self):
-        view = resolve('/reset/{uidb64}/{token}'.format(uidb64=self.uid, token=self.token))
+        view = resolve('/reset/{uidb64}/{token}/'.format(uidb64=self.uid, token=self.token))
         self.assertEquals(view.func.view_class, auth_views.PasswordResetConfirmView)
 
     def test_csrf(self):
@@ -99,12 +103,13 @@ class PasswordResetConfirmTests(TestCase):
 
     def test_contains_form(self):
         form = self.response.context.get('form')
-        self.assertEquals(form, SetPasswordForm)
+        self.assertIsInstance(form, SetPasswordForm)
 
     def test_form_inputs(self):
         """视图的输入必须包含3个：csrf 和 两个密码字段"""
         self.assertContains(self.response, '<input', 3)
         self.assertContains(self.response, 'type="password"', 2)
+
 
 class InvalidPasswordResetConfirmTests(TestCase):
     def setUp(self):
@@ -112,19 +117,20 @@ class InvalidPasswordResetConfirmTests(TestCase):
         uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
         token = default_token_generator.make_token(user)
         '''改变密码后token将变为非法的'''
-        user.set_password('123456abcdef')
+        user.set_password('123456ab!?')
         user.save()
 
-        url = reverse('password_reset_confirm', kwargs={'uidb64':uid, 'token': token})
+        url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
         self.response = self.client.get(url)
 
     def test_status_code(self):
         self.assertEquals(self.response.status_code, 200)
 
     def test_html(self):
-        password_reset_yrl = reverse('password_reset')
+        password_reset_url = reverse('password_reset')
         self.assertContains(self.response, 'invalid password reset link')
-        self.assertContains(self.response, 'href="{0}"'.format(password_reset_yrl))
+        self.assertContains(self.response, 'href="{0}"'.format(password_reset_url))
+
 
 class PasswordResetCompleteTests(TestCase):
     def setUp(self):
