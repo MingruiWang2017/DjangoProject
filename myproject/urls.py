@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^board/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
+    url(r'^board/(?P<pk>\d+)/topics/$', views.board_topics, name='board_topics'),
     url(r'^board/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
 
     url(r'^signup/$', accounts_views.signup, name='signup'),
@@ -50,4 +51,8 @@ urlpatterns = [
         name='password_change'),
     url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
         name='password_change_done'),
+
+    # reply
+    url(r'^board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
+
 ]
