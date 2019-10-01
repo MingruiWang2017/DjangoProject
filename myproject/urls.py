@@ -21,7 +21,9 @@ from boards import views
 from accounts import views as accounts_views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    # url(r'^$', views.home, name='home'),
+    url(r'^$', views.BoardListView.as_view(), name='home'),
+
     url(r'^admin/', admin.site.urls),
     url(r'^board/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
     url(r'^board/(?P<pk>\d+)/topics/$', views.board_topics, name='board_topics'),
@@ -49,11 +51,21 @@ urlpatterns = [
     # change password
     url(r'^settings/password/$', auth_views.PasswordChangeView.as_view(template_name='password_change.html'),
         name='password_change'),
-    url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
+    url(r'^settings/password/done/$',
+        auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
         name='password_change_done'),
 
     # reply
     url(r'^board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
     url(r'^board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$', views.reply_topic, name='reply_topic'),
+
+    # new post
+    # url(r'new_post/$', views.new_post, name='new_post'),
+    # url(r'new_post/$', views.NewPostView.as_view(), name='new_post'),
+    # url(r'new_post/$', views.NewPostViewGCBV.as_view(), name='new_post'),
+
+    # edit psot
+    url(r'board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/posts/(?P<post_pk>\d+)/edit/$',
+        views.PostUpdateView.as_view(), name='edit_post'),
 
 ]
