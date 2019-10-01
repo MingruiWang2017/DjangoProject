@@ -27,6 +27,7 @@ class Topic(models.Model):
     last_updated = models.DateTimeField(auto_now_add=True)  # 创建对象时，设置为当前时间
     board = models.ForeignKey(Board, related_name='topics')  # 外键，related_name告诉关联的模型用什么字段引用本模型
     starter = models.ForeignKey(User, related_name='topics')
+    views = models.PositiveIntegerField(default=0)  # 添加当前主题的访问次数
 
     def __str__(self):
         return self.subject
