@@ -62,12 +62,15 @@ urlpatterns = [
     url(r'^board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$', views.reply_topic, name='reply_topic'),
 
     # new post
-    # url(r'new_post/$', views.new_post, name='new_post'),
-    # url(r'new_post/$', views.NewPostView.as_view(), name='new_post'),
-    # url(r'new_post/$', views.NewPostViewGCBV.as_view(), name='new_post'),
+    # url(r'^new_post/$', views.new_post, name='new_post'),
+    # url(r'^new_post/$', views.NewPostView.as_view(), name='new_post'),
+    # url(r'^new_post/$', views.NewPostViewGCBV.as_view(), name='new_post'),
 
     # edit psot
-    url(r'board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/posts/(?P<post_pk>\d+)/edit/$',
+    url(r'^board/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/posts/(?P<post_pk>\d+)/edit/$',
         views.PostUpdateView.as_view(), name='edit_post'),
+
+    # my account
+    url(r'^settings/account/$', accounts_views.UserUpdateView.as_view(), name='my_account'),
 
 ]
