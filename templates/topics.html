@@ -38,6 +38,7 @@
     {% endfor %}
     </tbody>
 </table>
+
 {% if is_paginated %}
 <nav aria-label="Topics pagination" class="mb-4">
     <ul class="pagination">
@@ -51,7 +52,7 @@
         </li>
         {% endif %}
 
-        {% for page_num in paginator.page_num %}
+        {% for page_num in paginator.page_range %}
         {% if page_obj.number == page_num %}
         <li class="page-item active">
             <span class="page-link">
@@ -78,4 +79,5 @@
     </ul>
 </nav>
 {% endif %}
+
 {% endblock %}
