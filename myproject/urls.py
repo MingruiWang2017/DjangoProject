@@ -25,8 +25,8 @@ urlpatterns = [
     url(r'^$', views.BoardListView.as_view(), name='home'),
 
     url(r'^admin/', admin.site.urls),
-    url(r'^board/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
-    url(r'^board/(?P<pk>\d+)/topics/$', views.board_topics, name='board_topics'),
+    # url(r'^board/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
+    url(r'^board/(?P<pk>\d+)/$', views.TopicListView.as_view(), name='board_topics'),
     url(r'^board/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
 
     url(r'^signup/$', accounts_views.signup, name='signup'),

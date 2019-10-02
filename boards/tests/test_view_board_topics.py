@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.urls import resolve
 
 from ..models import Board
-from ..views import board_topics
+from ..views import board_topics, TopicListView
 
 class BoardTopicsTests(TestCase):
     def setUp(self):
@@ -28,7 +28,8 @@ class BoardTopicsTests(TestCase):
 
     def test_board_topics_url_resolvers_board_topics_view(self):
         view = resolve('/board/1/')
-        self.assertEqual(view.func, board_topics)
+        # self.assertEqual(view.func, board_topics)
+        self.assertEquals(view.func.view_class, TopicListView)
 
     def test_board_topics_view_contains_link_back_to_homepage(self):
         board_topics_url = reverse('board_topics', kwargs={'pk': 1})
