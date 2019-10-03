@@ -92,6 +92,7 @@ def topic_posts(request, pk, topic_pk):
     topic.save()
     return render(request, 'topic_posts.html', {'topic': topic})
 
+
 class PostListView(ListView):
     model = Post
     context_object_name = 'posts'
@@ -99,8 +100,13 @@ class PostListView(ListView):
     paginate_by = 2
 
     def get_context_data(self, **kwargs):
-        self.topic.views += 1
-        self.topic.save()
+        # 使用session控制相同用户多次刷新页面，views不变
+        session_key = 'viewed_topic_{}'.format(self.topic.pk)
+        if not self.request.session.get(session_key, False):
+            self.topic.views += 1
+            self.topic.save()
+            self.request.session[session_key] = True
+
         kwargs['topic'] = self.topic
         return super().get_context_data(**kwargs)
 
